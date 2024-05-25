@@ -166,5 +166,8 @@
         "files": [
             "config/packages/validator.yaml"
         ]
+    },
+    "symfonycasts/micro-mapper": {
+        "version": "v0.1.4"
     }
 }

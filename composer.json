@@ -30,6 +30,7 @@
         "symfony/twig-bundle": "7.0.*",
         "symfony/validator": "7.0.*",
         "symfony/yaml": "7.0.*",
+        "symfonycasts/micro-mapper": "^0.1.4",
         "webonyx/graphql-php": "^15.11"
     },
     "config": {
