@@ -6,25 +6,27 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User
+class User  implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $telephone = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $fullName = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $password = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $age = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -36,11 +38,11 @@ class User
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $bio = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $phoneEmail = null;
+    #[ORM\Column(length: 255, unique: true, nullable: true)]
+    private ?string $email = null;
 
     #[ORM\ManyToOne(inversedBy: 'users')]
-    private ?site $siteId = null;
+    private ?Site $siteId = null;
 
     /**
      * @var Collection<int, Element>
@@ -65,6 +67,9 @@ class User
      */
     #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'receiverId')]
     private Collection $receivers;
+
+    #[ORM\Column(type: 'json')]
+    private array $roles = [];
 
     public function __construct()
     {
@@ -163,24 +168,24 @@ class User
         return $this;
     }
 
-    public function getPhoneEmail(): ?string
+    public function getEmail(): ?string
     {
-        return $this->phoneEmail;
+        return $this->email;
     }
 
-    public function setPhoneEmail(?string $phoneEmail): static
+    public function setEmail(?string $email): static
     {
-        $this->phoneEmail = $phoneEmail;
+        $this->email = $email;
 
         return $this;
     }
 
-    public function getSiteId(): ?site
+    public function getSiteId(): ?Site
     {
         return $this->siteId;
     }
 
-    public function setSiteId(?site $siteId): static
+    public function setSiteId(?Site $siteId): static
     {
         $this->siteId = $siteId;
 
@@ -305,5 +310,34 @@ class User
         }
 
         return $this;
+    }
+
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+
+
+    public function eraseCredentials(): void
+    {
+        // TODO: Implement eraseCredentials() method.
+    }
+
+    public function getUserIdentifier(): string
+    {
+        // TODO: Implement getUserIdentifier() method.
+        return (string) $this->email;
+
     }
 }

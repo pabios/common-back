@@ -11,17 +11,17 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Entity\Element;
+use App\Entity\User;
 use App\State\EntityClassDtoStateProcessor;
 use App\State\EntityToDtoStateProvider;
 
 #[ApiResource(
-    shortName: 'Element',
+    shortName: 'User',
     operations: [
         new Get(),
         new GetCollection(),
         new Post(
             formats: ['json'=>['application/json']],
-            security: 'is_granted("ROLE_PRODUCT_CREATE")',
         ),
         new Patch(),
         new Delete(
@@ -31,26 +31,39 @@ use App\State\EntityToDtoStateProvider;
     paginationItemsPerPage: 5,
     provider: EntityToDtoStateProvider::class,
     processor: EntityClassDtoStateProcessor::class,
-    stateOptions: new Options(entityClass: Element::class),
+    stateOptions: new Options(entityClass: User::class),
 )]
-class ElementRessource
+class UserRessource
 {
-
     #[ApiProperty(readable: true,writable: false)]
     public ?int $id = null;
+    public ?string $email = null;
+    public ?string $password = null;
 
-    public ?string $name = null;
-    public ?string $content = null;
-    public ?string $description = null;
-    public ?string $locate = null;
-    public ?string $price = null;
-    public ?string $size = null;
-    public ?\DateTime $createdDate = null;
+    public ?string $telephone = null;
 
-    public ?int $verified = null;
+    public ?string $fullName = null;
 
-    public ?string $exactLocate = null;
 
-    public ?string $desired = null;
-    public ?string $city = null;
+    public ?string $age = null;
+
+    public ?string $imgUrl = null;
+
+    public ?string $badge = null;
+
+    public ?string $bio = null;
+
+    public ?array $roles = [];
+
+
+//    public ?Site $siteId = null;
+//
+//    public Collection $elements;
+//
+//    public Collection $bookings;
+//
+//    public Collection $messages;
+//
+//    public Collection $receivers;
+
 }
