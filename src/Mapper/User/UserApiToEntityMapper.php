@@ -5,6 +5,7 @@ namespace App\Mapper\User;
 use App\ApiResource\UserRessource;
 use App\Entity\User;
 use App\Repository\UserRepository;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfonycasts\MicroMapper\AsMapper;
@@ -19,6 +20,7 @@ class UserApiToEntityMapper implements MapperInterface
         private UserRepository $userRepository,
         private UserPasswordHasherInterface $userPasswordHasher,
         private MicroMapperInterface $microMapper,
+        private LoggerInterface $logger
     )
     {
     }
@@ -43,6 +45,7 @@ class UserApiToEntityMapper implements MapperInterface
         $entity = $to;
         assert($entity instanceof User);
 
+        $this->logger->info('BONJOUR ');
         $entity->setEmail($dto->email);
         $entity->setFullName($dto->fullName);
         $entity->setTelephone($dto->telephone);

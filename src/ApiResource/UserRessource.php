@@ -40,18 +40,18 @@ class UserRessource
     public ?string $email = null;
     public ?string $password = null;
 
-    public ?string $telephone = null;
+    public ?string $telephone = "";
 
-    public ?string $fullName = null;
+    public ?string $fullName = "";
 
 
-    public ?string $age = null;
+    public ?string $age = "";
 
-    public ?string $imgUrl = null;
+    public ?string $imgUrl = "";
 
-    public ?string $badge = null;
+    public ?string $badge = "";
 
-    public ?string $bio = null;
+    public ?string $bio = "aucune bio";
 
     public ?array $roles = [];
 

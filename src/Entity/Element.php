@@ -50,13 +50,13 @@ class Element
     private ?string $city = null;
 
     #[ORM\ManyToOne(inversedBy: 'elements')]
-    private ?elementType $elementTypeId = null;
+    private ?ElementType $elementTypeId = null;
 
     #[ORM\ManyToOne(inversedBy: 'elements')]
-    private ?user $userId = null;
+    private ?User $userId = null;
 
     #[ORM\ManyToOne(inversedBy: 'elements')]
-    private ?categorie $cotegorieId = null;
+    private ?Categorie $cotegorieId = null;
 
     /**
      * @var Collection<int, Booking>
