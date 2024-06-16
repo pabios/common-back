@@ -5,9 +5,11 @@ namespace App\Domain\Service;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Log\Logger;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -25,7 +27,8 @@ class AuthLogin extends  AbstractAuthenticator
     public function __construct(
         public JWTTokenManagerInterface $jwtManager,
         public EntityManagerInterface $entityManager,
-        public UserPasswordHasherInterface $userPasswordHasher
+        public UserPasswordHasherInterface $userPasswordHasher,
+        public LoggerInterface $logger
     )
     {}
 
@@ -94,15 +97,22 @@ class AuthLogin extends  AbstractAuthenticator
 
         return new Passport(
             new UserBadge($email, $checkIdentifierFunction),
-            new PasswordCredentials($password)
+            new CustomCredentials($checkPasswordFunction,$password)
         );
     }
      public function onAuthenticationSuccess(Request $request, TokenInterface $token , string $firewallName): ?JsonResponse
     {
         $user = $token->getUser();
 
-        $jwtManager = $this->jwtManager;
-        $newToken = $jwtManager->create($user);
+        $payload = [
+           'data'=>[
+               'user'=> $user->getUserIdentifier()
+           ]
+        ];
+
+        $generateToken = $this->jwtManager->createFromPayload($user,$payload);
+
+
 
         $data = [
             'success' => true,
@@ -110,7 +120,7 @@ class AuthLogin extends  AbstractAuthenticator
             'user'=>[
                 'email' => $user->getUserIdentifier()
             ],
-            'token' => $newToken
+            'token' => $generateToken
         ];
 
         return new JsonResponse($data);
